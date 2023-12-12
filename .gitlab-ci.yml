@@ -1,0 +1,26 @@
+stages:
+  - test
+  - build
+  - deploy
+
+test:
+  stage: test
+  script:
+    # Run unit tests
+    - pytest
+    - docker run visitor-counter python -m unittest discover
+
+build:
+  stage: build
+  script:
+    - docker build -t visitor-counter .
+
+# deploy:
+#   stage: deploy
+#   script:
+#     # Install dependencies
+#     - pip install -r requirements.txt
+    
+#   artifacts:
+#     paths:
+#       - deploy_log.txt
