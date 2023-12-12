@@ -1,0 +1,6 @@
+Flask
+gunicorn
+Werkzeug==2.2.2
+redis
+
+# docker run -v /Users/randall/Desktop/traffic_app/index.html -v /Users/randall/Desktop/traffic_app/main.py -it visitor-counter:latest
