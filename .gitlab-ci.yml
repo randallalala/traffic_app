@@ -1,26 +1,56 @@
 stages:
-  - test
   - build
+  - test
   - deploy
 
-test:
-  stage: test
-  script:
-    # Run unit tests
-    - pytest
-    - docker run visitor-counter python -m unittest discover
+# services:
+#   - docker:dind
+
+# variables:
+#   DOCKER_DRIVER: overlay2
+#   DOCKER_HOST: tcp://docker:2375/
+
+# before_script:
+#   - docker info
+
+
+
 
 build:
   stage: build
   script:
-    - docker build -t visitor-counter .
+    # Build Docker image
+    - docker-compose build -t web .
+  artifacts:
+    paths:
+      - docker-compose.yml
+      - Dockerfile
+      - requirements.txt
+
+test:
+  stage: test
+  # image: docker:latest
+  # services:
+  #   - redis:latest
+  script:
+    # Install dependencies
+    # - docker-compose run --rm web pip install -r requirements.txt
+    # # Run unit tests
+    # - docker-compose run --rm web pytest
+    - docker run -d -p 5000:5000 --name my-running-app my-python-app
+    - docker ps | grep my-running-app
+
+  # artifacts:
+  #   paths:
+  #     - test_results.xml
+
 
 # deploy:
 #   stage: deploy
+#   image: docker:latest
 #   script:
-#     # Install dependencies
-#     - pip install -r requirements.txt
-    
+#     # Deploy application
+#     - docker-compose up -d
 #   artifacts:
 #     paths:
-#       - deploy_log.txt
+#       - docker-compose.logs
